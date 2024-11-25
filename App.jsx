@@ -6,7 +6,6 @@ const App = () => {
     <View>
       <Text>App</Text>
       <Text>Hello World</Text>
-      <Text>This is a React Native App</Text>
     </View>
   );
 };
