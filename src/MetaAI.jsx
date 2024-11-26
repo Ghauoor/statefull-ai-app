@@ -1,30 +1,43 @@
 import {ImageBackground, StyleSheet} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useState} from 'react';
 import WABG from './assets/w_bg.png';
 import CustomHeader from './components/CustomHeader';
+import SendButton from './components/SendButton';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  addChat,
-  clearAllChats,
+  changeCurrentChatId,
   selectChats,
   selectCurrentChatId,
-  setCurrentChat,
 } from './redux/reducers/chatSlice';
 
 const MetaAI = () => {
-  const chat = useSelector(selectChats);
+  const [isTyping, setIsTyping] = useState(false);
+  const [heightOfMessageBox, setHeightOfMessageBox] = useState(0);
   const currentChatId = useSelector(selectCurrentChatId);
-
+  const chats = useSelector(selectChats);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(clearAllChats());
-  }, [dispatch]);
+  const setCurrentChatId = id => {
+    dispatch(changeCurrentChatId({chatId: id}));
+  };
 
-  console.log("I'm working Fine -->", chat, currentChatId);
   return (
     <ImageBackground source={WABG} style={styles.container} resizeMode="cover">
       <CustomHeader />
+      <SendButton
+        isTyping={isTyping}
+        setHeightOfMessageBox={setHeightOfMessageBox}
+        heightOfMessageBox={heightOfMessageBox}
+        setIsTyping={setIsTyping}
+        currentChatId={currentChatId}
+        setCurrentChatId={id => setCurrentChatId(id)}
+        messages={
+          chats?.find(chat => chat.id === currentChatId)?.messages || []
+        }
+        length={
+          chats?.find(chat => chat.id === currentChatId)?.messages?.length || 0
+        }
+      />
     </ImageBackground>
   );
 };
