@@ -14,14 +14,14 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import MetaAILogo from '../assets/logo_s.jpeg';
 import CustomText from './CustomText';
 import {useDispatch} from 'react-redux';
-import {clearAllChats} from '../redux/reducers/chatSlice';
+import {clearAllChats, clearChat} from '../redux/reducers/chatSlice';
 
-const CustomHeader = () => {
+const CustomHeader = ({currentChatId, chats, setCurrentChatId}) => {
   const dispatch = useDispatch();
-
-  const handleClear = () => {
-    dispatch(clearAllChats());
+  const onClearChats = async () => {
+    await dispatch(clearChat({chatId: currentChatId}));
   };
+
   return (
     <View style={styles.container}>
       <SafeAreaView>
@@ -42,7 +42,7 @@ const CustomHeader = () => {
             </View>
           </View>
           {/* Clear Button */}
-          <TouchableOpacity onPress={handleClear}>
+          <TouchableOpacity onPress={onClearChats}>
             <CustomText size={RFValue(15)}>Clear</CustomText>
           </TouchableOpacity>
         </View>

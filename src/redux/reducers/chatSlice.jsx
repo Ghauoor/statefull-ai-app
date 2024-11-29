@@ -31,11 +31,24 @@ export const chatSlice = createSlice({
         summary,
       });
     },
+    clearChat: (state, action) => {
+      const chatIndex = state.chats.findIndex(
+        chat => chat.id === action.payload.chatId,
+      );
+      if (chatIndex !== -1) {
+        state.chats[chatIndex].messages = [];
+      }
+    },
   },
 });
 
-export const {addMessage, clearAllChats, changeCurrentChatId, createNewChat} =
-  chatSlice.actions;
+export const {
+  addMessage,
+  clearAllChats,
+  changeCurrentChatId,
+  createNewChat,
+  clearChat,
+} = chatSlice.actions;
 
 export const selectChats = state => state.chat.chats;
 export const selectCurrentChatId = state => state.chat.currentChatId;
