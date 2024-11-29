@@ -77,9 +77,12 @@ const SendButton = ({
         message: {
           content: message,
           time: new Date().toString(),
-          role: 'user',
+          role: 'assistant',
           id: length + 1,
           isMessageRead: false,
+          isLoading: true, // set to false
+          imageUri:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlROcXWBsxzaZwXERUSfV6eD92_-KLFAvjbg&s',
         },
       }),
     );

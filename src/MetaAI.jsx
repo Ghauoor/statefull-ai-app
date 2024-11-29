@@ -9,6 +9,7 @@ import {
   selectChats,
   selectCurrentChatId,
 } from './redux/reducers/chatSlice';
+import Chat from './components/Chat';
 
 const MetaAI = () => {
   const [isTyping, setIsTyping] = useState(false);
@@ -24,6 +25,13 @@ const MetaAI = () => {
   return (
     <ImageBackground source={WABG} style={styles.container} resizeMode="cover">
       <CustomHeader />
+      <Chat
+        isTyping={isTyping}
+        heightOfMessageBox={heightOfMessageBox}
+        messages={
+          chats?.find(chat => chat.id === currentChatId)?.messages || []
+        }
+      />
       <SendButton
         isTyping={isTyping}
         setHeightOfMessageBox={setHeightOfMessageBox}
