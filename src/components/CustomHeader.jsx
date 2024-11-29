@@ -1,3 +1,5 @@
+import React, {useState} from 'react';
+
 import {
   Image,
   SafeAreaView,
@@ -5,19 +7,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+
 import {
   Bars3BottomLeftIcon,
   CheckBadgeIcon,
 } from 'react-native-heroicons/solid';
 import {RFValue} from 'react-native-responsive-fontsize';
-import MetaAILogo from '../assets/logo_s.jpeg';
-import CustomText from './CustomText';
 import {useDispatch} from 'react-redux';
-import {clearAllChats, clearChat} from '../redux/reducers/chatSlice';
+
+import CustomText from './CustomText';
+import MetaAILogo from '../assets/logo_s.jpeg';
+import SideDrawer from './SideDrawer';
+import {clearChat} from '../redux/reducers/chatSlice';
 
 const CustomHeader = ({currentChatId, chats, setCurrentChatId}) => {
   const dispatch = useDispatch();
+  const [visiable, setVisiable] = useState(false);
   const onClearChats = async () => {
     await dispatch(clearChat({chatId: currentChatId}));
   };
@@ -47,6 +52,7 @@ const CustomHeader = ({currentChatId, chats, setCurrentChatId}) => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
+      <SideDrawer />
     </View>
   );
 };

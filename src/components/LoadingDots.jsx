@@ -1,5 +1,7 @@
-import {Animated, Easing, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
+
+import {Animated, Easing, StyleSheet, View} from 'react-native';
+
 import {RFValue} from 'react-native-responsive-fontsize';
 
 const LoadingDots = () => {

@@ -1,8 +1,10 @@
 import React from 'react';
-import MetaAI from './src/MetaAI';
-import {Provider} from 'react-redux';
-import {persistor, store} from './src/redux/store';
+
 import {PersistGate} from 'redux-persist/integration/react';
+import {Provider} from 'react-redux';
+
+import MetaAI from './src/MetaAI';
+import {persistor, store} from './src/redux/store';
 
 const App = () => {
   return (

@@ -1,5 +1,3 @@
-import {configureStore} from '@reduxjs/toolkit';
-
 import {
   FLUSH,
   REHYDRATE,
@@ -10,9 +8,9 @@ import {
   persistReducer,
   persistStore,
 } from 'redux-persist';
+import {configureStore} from '@reduxjs/toolkit';
 
 import reduxStorage from './storage';
-
 import rootReducer from './rootReducer';
 
 const persistConfig = {

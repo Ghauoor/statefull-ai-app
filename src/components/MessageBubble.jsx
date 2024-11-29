@@ -1,9 +1,12 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+
+import {Image, StyleSheet, Text, View} from 'react-native';
+
 import MarkdownDisplay from 'react-native-markdown-display';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
-import TickIcon from '../assets/tick.png';
+
 import LoadingDots from './LoadingDots';
+import TickIcon from '../assets/tick.png';
 
 const MessageBubble = ({message}) => {
   const isMyMessage = message?.role === 'user';

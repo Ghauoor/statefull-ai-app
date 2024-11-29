@@ -1,10 +1,13 @@
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import useKeyBoardOffsetHeight from '../helpers/useKeyBoardOffsetHeight';
-import getMessageHeightOffset from '../helpers/getMessageHeightOffset';
+
+import {Dimensions, StyleSheet, View} from 'react-native';
+
 import {FlashList} from '@shopify/flash-list';
-import MessageBubble from './MessageBubble';
+
 import EmptyComponent from './EmptyComponent';
+import MessageBubble from './MessageBubble';
+import getMessageHeightOffset from '../helpers/getMessageHeightOffset';
+import useKeyBoardOffsetHeight from '../helpers/useKeyBoardOffsetHeight';
 
 const windowHeight = Dimensions.get('window').height;
 

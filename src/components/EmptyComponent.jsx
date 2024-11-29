@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from 'react';
+
 import {
   Animated,
   ScrollView,
@@ -7,10 +8,11 @@ import {
   View,
   Text,
 } from 'react-native';
+
 import {RFValue} from 'react-native-responsive-fontsize';
 
-import MetaAI from '../assets/logo_t.png';
 import CustomText from './CustomText';
+import MetaAI from '../assets/logo_t.png';
 
 const aiQuestions = [
   "🤔 What's the meaning of life?",

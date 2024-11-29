@@ -1,3 +1,5 @@
+import React, {useEffect, useRef, useState} from 'react';
+
 import {
   StyleSheet,
   View,
@@ -6,20 +8,20 @@ import {
   TextInput,
   Animated,
   TouchableOpacity,
-  Text,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+
+import uuid from 'react-native-uuid';
+import {PaperAirplaneIcon} from 'react-native-heroicons/solid';
 import {RFValue} from 'react-native-responsive-fontsize';
-import useKeyBoardOffsetHeight from '../helpers/useKeyBoardOffsetHeight';
 import {useDispatch, useSelector} from 'react-redux';
+
+import useKeyBoardOffsetHeight from '../helpers/useKeyBoardOffsetHeight';
 import {
   addMessage,
   createNewChat,
   selectChats,
   selectCurrentChatId,
 } from '../redux/reducers/chatSlice';
-import {PaperAirplaneIcon} from 'react-native-heroicons/solid';
-import uuid from 'react-native-uuid';
 
 const windowHeight = Dimensions.get('window').height;
 

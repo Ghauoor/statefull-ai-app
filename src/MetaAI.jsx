@@ -1,15 +1,18 @@
-import {ImageBackground, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
-import WABG from './assets/w_bg.png';
+
+import {ImageBackground, StyleSheet} from 'react-native';
+
+import {useDispatch, useSelector} from 'react-redux';
+
+import Chat from './components/Chat';
 import CustomHeader from './components/CustomHeader';
 import SendButton from './components/SendButton';
-import {useDispatch, useSelector} from 'react-redux';
+import WABG from './assets/w_bg.png';
 import {
   changeCurrentChatId,
   selectChats,
   selectCurrentChatId,
 } from './redux/reducers/chatSlice';
-import Chat from './components/Chat';
 
 const MetaAI = () => {
   const [isTyping, setIsTyping] = useState(false);
