@@ -31,7 +31,7 @@ const CustomHeader = ({currentChatId, chats, setCurrentChatId}) => {
     <View style={styles.container}>
       <SafeAreaView>
         <View style={styles.subContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setVisiable(true)}>
             <Bars3BottomLeftIcon size={RFValue(25)} color="white" />
           </TouchableOpacity>
           {/* Image with Text */}
@@ -39,7 +39,7 @@ const CustomHeader = ({currentChatId, chats, setCurrentChatId}) => {
             <Image source={MetaAILogo} style={styles.img} />
             <View>
               <CustomText fontWeight="bold">
-                Meta AI <CheckBadgeIcon size={RFValue(15)} color="#27d366" />
+                State AI <CheckBadgeIcon size={RFValue(15)} color="#27d366" />
               </CustomText>
               <CustomText fontWeight={500} opacity={0.7} size={12}>
                 with Llama 3
@@ -52,7 +52,15 @@ const CustomHeader = ({currentChatId, chats, setCurrentChatId}) => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      <SideDrawer />
+      {visiable && (
+        <SideDrawer
+          setCurrentChatId={id => setCurrentChatId(id)}
+          chats={chats}
+          currentChatId={currentChatId}
+          visiable={visiable}
+          onPressHide={() => setVisiable(false)}
+        />
+      )}
     </View>
   );
 };
