@@ -52,7 +52,7 @@ const SideDrawer = ({
           {item?.summary}
         </CustomText>
         <TouchableOpacity
-          onPress={() => deletAChat(setCurrentChatId(item.id))}
+          onPress={() => deletAChat(item.id)}
           style={styles.trashIcon}>
           <TrashIcon size={RFValue(12)} color="#ef4444" />
         </TouchableOpacity>
@@ -65,7 +65,7 @@ const SideDrawer = ({
     onPressHide();
   };
   const deletAChat = id => {
-    dispatch(deletChat(id));
+    dispatch(deletChat({chatId: id}));
     onPressHide();
   };
 

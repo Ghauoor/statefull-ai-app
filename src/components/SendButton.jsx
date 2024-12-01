@@ -79,12 +79,13 @@ const SendButton = ({
         message: {
           content: message,
           time: new Date().toString(),
-          role: 'assistant',
+          role: 'user',
           id: length + 1,
           isMessageRead: false,
-          isLoading: true, // set to false
-          imageUri:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlROcXWBsxzaZwXERUSfV6eD92_-KLFAvjbg&s',
+
+          // isLoading: true, // set to false
+          // imageUri:
+          //   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlROcXWBsxzaZwXERUSfV6eD92_-KLFAvjbg&s',
         },
       }),
     );
@@ -131,7 +132,7 @@ const SendButton = ({
                     createNewChat({
                       chatId: newId,
                       messages: [],
-                      summary: '',
+                      summary: 'This is a summary',
                     }),
                   );
 
