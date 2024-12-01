@@ -45,6 +45,17 @@ export const chatSlice = createSlice({
         chat => chat.id !== action.payload.chatId,
       );
     },
+
+    updateChatSummary: (state, action) => {
+      const {chatId, messages, summary} = action.payload;
+      const chatIndex = state.chats.findIndex(chat => chat.id === chatId);
+      if (chatIndex !== -1) {
+        state.chats[chatIndex].summary = summary;
+        if (messages) {
+          state.chats[chatIndex].messages = messages;
+        }
+      }
+    },
   },
 });
 
@@ -55,6 +66,7 @@ export const {
   createNewChat,
   clearChat,
   deletChat,
+  updateChatSummary,
 } = chatSlice.actions;
 
 export const selectChats = state => state.chat.chats;

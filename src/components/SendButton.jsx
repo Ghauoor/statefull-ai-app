@@ -21,6 +21,7 @@ import {
   createNewChat,
   selectChats,
   selectCurrentChatId,
+  updateChatSummary,
 } from '../redux/reducers/chatSlice';
 
 const windowHeight = Dimensions.get('window').height;
@@ -40,6 +41,7 @@ const SendButton = ({
   const animationValue = useRef(new Animated.Value(0)).current;
 
   const [message, setMessage] = useState('');
+  const TextInputRef = useRef(null);
   const keyBoardOffsetHeight = useKeyBoardOffsetHeight();
 
   const handleTextChange = text => {
@@ -73,6 +75,14 @@ const SendButton = ({
 
   const addChat = async newId => {
     let selectedChatId = newId ? newId : currentChatId;
+    if (length === 0 && message.trim().length > 0) {
+      await dispatch(
+        updateChatSummary({
+          chatId: selectedChatId,
+          summary: message.trim().slice(0, 40),
+        }),
+      );
+    }
     await dispatch(
       addMessage({
         chatId: selectedChatId,
@@ -82,13 +92,32 @@ const SendButton = ({
           role: 'user',
           id: length + 1,
           isMessageRead: false,
-
-          // isLoading: true, // set to false
-          // imageUri:
-          //   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlROcXWBsxzaZwXERUSfV6eD92_-KLFAvjbg&s',
         },
       }),
     );
+    setMessage('');
+    setIsTyping(false);
+    TextInputRef.current.blur();
+  };
+
+  const handleSendMessage = async () => {
+    const chatIndex = chats.findIndex(chat => chat.id === currentChatId);
+
+    if (chatIndex === -1) {
+      const newId = uuid.v4();
+      await dispatch(
+        createNewChat({
+          chatId: newId,
+          messages: [],
+          summary: 'The is new Summary',
+        }),
+      );
+
+      setCurrentChatId(newId);
+      await addChat(newId);
+    } else {
+      await addChat();
+    }
   };
 
   console.log('Messages --->', JSON.stringify(chats));
@@ -115,31 +144,14 @@ const SendButton = ({
             onChangeText={handleTextChange}
             onContentSizeChange={handleContentSizeChange}
             value={message}
+            ref={TextInputRef}
           />
         </View>
         {isTyping && (
           <Animated.View style={[styles.sendButtonWrapper, sendButtonStyle]}>
             <TouchableOpacity
               style={styles.sendButton}
-              onPress={async () => {
-                const chatIndex = chats.findIndex(
-                  chat => chat.id === currentChatId,
-                );
-                if (chatIndex === -1) {
-                  const newId = uuid.v4();
-                  setCurrentChatId(newId);
-                  await dispatch(
-                    createNewChat({
-                      chatId: newId,
-                      messages: [],
-                      summary: 'This is a summary',
-                    }),
-                  );
-
-                  addChat(newId);
-                  return;
-                }
-              }}>
+              onPress={handleSendMessage}>
               <PaperAirplaneIcon size={24} color="white" />
             </TouchableOpacity>
           </Animated.View>
