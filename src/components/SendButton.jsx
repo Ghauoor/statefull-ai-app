@@ -19,6 +19,7 @@ import useKeyBoardOffsetHeight from '../helpers/useKeyBoardOffsetHeight';
 import {
   addMessage,
   createNewChat,
+  markMessageAsRead,
   selectChats,
   selectCurrentChatId,
   updateChatSummary,
@@ -73,6 +74,19 @@ const SendButton = ({
     ],
   };
 
+  const identifyImageApi = prompt => {
+    const imageRegex = /\(generate\s*image\)|imagine\b/i;
+
+    if (imageRegex.test(prompt)) {
+      return true;
+    }
+    return false;
+  };
+
+  const fetchResponse = async (mes, selectedChatId) => {};
+
+  const generateImage = async (mes, selectedChatId) => {};
+
   const addChat = async newId => {
     let selectedChatId = newId ? newId : currentChatId;
     if (length === 0 && message.trim().length > 0) {
@@ -96,8 +110,25 @@ const SendButton = ({
       }),
     );
     setMessage('');
-    setIsTyping(false);
     TextInputRef.current.blur();
+    setIsTyping(false);
+
+    let promptForAssistant = {
+      content: message,
+      time: new Date().toString(),
+      role: 'user',
+      id: length + 1,
+    };
+
+    if (!identifyImageApi(message?.trim())) {
+      fetchResponse(promptForAssistant, selectedChatId);
+    } else {
+      generateImage(promptForAssistant, selectedChatId);
+    }
+
+    dispatch(
+      markMessageAsRead({chatId: selectedChatId, messageId: length + 1}),
+    );
   };
 
   const handleSendMessage = async () => {
@@ -119,8 +150,6 @@ const SendButton = ({
       await addChat();
     }
   };
-
-  console.log('Messages --->', JSON.stringify(chats));
 
   return (
     <View
