@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import EventSource from 'react-native-sse';
 import uuid from 'react-native-uuid';
 import {PaperAirplaneIcon} from 'react-native-heroicons/solid';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -17,13 +18,22 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import useKeyBoardOffsetHeight from '../helpers/useKeyBoardOffsetHeight';
 import {
+  addAssistantMessage,
   addMessage,
   createNewChat,
   markMessageAsRead,
   selectChats,
   selectCurrentChatId,
+  updateAssistantMessage,
   updateChatSummary,
 } from '../redux/reducers/chatSlice';
+import {
+  HUGGING_API_KEY,
+  HUGGING_API_URL,
+  STABLE_DIFFUSION_API_KEY,
+  STABLE_DIFFUSION_API_URL,
+} from '../redux/API';
+import axios from 'axios';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -83,9 +93,167 @@ const SendButton = ({
     return false;
   };
 
-  const fetchResponse = async (mes, selectedChatId) => {};
+  const fetchResponse = async (mes, selectedChatId) => {
+    let id = length + 2;
+    dispatch(
+      addAssistantMessage({
+        chatId: selectedChatId,
+        message: {
+          content: '...',
+          time: mes.time,
+          role: 'assistant',
+          id: id,
+        },
+      }),
+    );
 
-  const generateImage = async (mes, selectedChatId) => {};
+    const eventSource = new EventSource(HUGGING_API_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${HUGGING_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      pollingInterval: 0,
+      body: JSON.stringify({
+        model: 'meta-llama/Meta-Llama-3-8B-Instruct',
+        messages: [...messages, mes],
+        max_tokens: 500,
+        n: 1,
+        temperature: 0.7,
+        stream: true,
+      }),
+    });
+
+    let content = '';
+    let responseCompleted = false;
+
+    eventSource.addEventListener('message', async event => {
+      if (event.data !== '[DONE]') {
+        try {
+          const parsedData = JSON.parse(event.data);
+          if (parsedData.choices && parsedData.choices.length > 0) {
+            const delta = parsedData.choices[0].delta.content;
+            if (delta) {
+              content += delta;
+              await dispatch(
+                updateAssistantMessage({
+                  chatId: selectedChatId,
+                  messageId: id,
+                  message: {
+                    content: content,
+                    time: new Date().toString(),
+                    role: 'assistant',
+                    id: id,
+                  },
+                }),
+              );
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing SSE message:', error);
+        }
+      } else {
+        responseCompleted = true;
+        eventSource.close();
+      }
+    });
+
+    eventSource.addEventListener('error', async error => {
+      console.log(error?.message);
+      await dispatch(
+        updateAssistantMessage({
+          chatId: selectedChatId,
+          messageId: id,
+          message: {
+            content: 'OOPSSS....',
+            time: new Date().toString(),
+            role: 'assistant',
+            id: id,
+          },
+        }),
+      );
+
+      eventSource.close();
+    });
+
+    eventSource.addEventListener('close', () => {
+      if (!responseCompleted) {
+        console.warn('Response not completed but connection closed.');
+      }
+      eventSource.close();
+    });
+
+    return () => {
+      eventSource.removeAllEventListeners();
+      eventSource.close();
+    };
+  };
+
+  const generateImage = async (mes, selectedChatId) => {
+    let id = length + 2;
+    dispatch(
+      addAssistantMessage({
+        chatId: selectedChatId,
+        message: {
+          content: '...',
+          time: mes.time,
+          role: 'assistant',
+          id: id,
+        },
+      }),
+    );
+
+    try {
+      const res = await axios.post(
+        STABLE_DIFFUSION_API_URL,
+        {
+          key: STABLE_DIFFUSION_API_KEY,
+          prompt: message,
+
+          width: '512',
+          height: '512',
+          safety_checker: false,
+          seed: null,
+          sample: 1,
+          base64: false,
+          track_id: null,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+
+        await dispatch(
+          updateAssistantMessage({
+            chatId: selectedChatId,
+            messageId: id,
+            message: {
+              content: res?.data?.output[0],
+              imageUri: res?.data?.output[0],
+              time: new Date().toString(),
+              role: 'assistant',
+              id: id,
+            },
+          }),
+        ),
+      );
+    } catch (error) {
+      console.log('Error in generating image: ', error?.message);
+      await dispatch(
+        updateAssistantMessage({
+          chatId: selectedChatId,
+          messageId: id,
+          message: {
+            content: 'OOPSSS....',
+            time: new Date().toString(),
+            role: 'assistant',
+            id: id,
+          },
+        }),
+      );
+    }
+  };
 
   const addChat = async newId => {
     let selectedChatId = newId ? newId : currentChatId;

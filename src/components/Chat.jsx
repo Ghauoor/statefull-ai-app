@@ -12,7 +12,6 @@ import useKeyBoardOffsetHeight from '../helpers/useKeyBoardOffsetHeight';
 const windowHeight = Dimensions.get('window').height;
 
 const Chat = ({isTyping, messages, heightOfMessageBox}) => {
-  console.log('Messages -->', JSON.stringify(messages));
   const keyBoardOffsetHeight = useKeyBoardOffsetHeight();
   const renderMessageBubble = ({item}) => {
     return <MessageBubble message={item} />;

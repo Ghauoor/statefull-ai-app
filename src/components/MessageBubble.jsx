@@ -40,14 +40,14 @@ const MessageBubble = ({message}) => {
             code_inline: {
               backgroundColor: '#1d211e',
               color: '#f1f0f0',
-              fense: {
-                backgroundColor: '#1d211e',
-                color: '#f1f0f0',
-                borderWidth: 0,
-              },
-              tr: {
-                borderColor: '#145240',
-              },
+            },
+            fense: {
+              backgroundColor: '#1d211e',
+              color: '#f1f0f0',
+              borderWidth: 0,
+            },
+            tr: {
+              borderColor: '#145240',
             },
           }}>
           {message?.content}
